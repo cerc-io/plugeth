@@ -15,7 +15,7 @@
 // along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
 
 // geth is the official command-line client for Ethereum.
-package main
+package geth
 
 import (
 	"fmt"
@@ -267,7 +267,10 @@ func init() {
 	}
 }
 
-func main() {
+// FIXME workaround https://github.com/golang/go/issues/31354 by wrapping main
+func main() { Main() }
+
+func Main() {
 	if err := app.Run(os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

@@ -1,4 +1,4 @@
-package main
+package geth
 
 import (
 	"github.com/ethereum/go-ethereum/log"
@@ -105,18 +105,18 @@ func pluginsOnShutdown() {
 
 func BlockChain(pl *plugins.PluginLoader) {
 	fnList := pl.Lookup("BlockChain", func(item interface{}) bool {
-			_, ok := item.(func())
-			return ok
+		_, ok := item.(func())
+		return ok
 	})
 	for _, fni := range fnList {
-			fni.(func())()
+		fni.(func())()
 	}
 }
 
 func pluginBlockChain() {
 	if plugins.DefaultPluginLoader == nil {
-			log.Warn("Attempting BlockChain, but default PluginLoader has not been initialized")
-			return
+		log.Warn("Attempting BlockChain, but default PluginLoader has not been initialized")
+		return
 	}
 	BlockChain(plugins.DefaultPluginLoader)
 }
