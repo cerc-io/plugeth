@@ -96,7 +96,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-replace (
-	github.com/ethereum/go-ethereum => ../
-	github.com/openrelayxyz/plugeth-utils => git.vdb.to/cerc-io/plugeth-utils v0.0.0-20230614134222-d8d1347863d8
-)
+replace github.com/ethereum/go-ethereum => ../
+
+replace github.com/openrelayxyz/plugeth-utils => git.vdb.to/cerc-io/plugeth-utils v0.0.0-20230706160122-cd41de354c46
