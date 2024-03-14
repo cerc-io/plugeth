@@ -132,14 +132,14 @@ func startGethWithIpc(t *testing.T, name string, args ...string) *gethrpc {
 	return nil
 }
 
-func initGeth(t *testing.T) string {
-	args := []string{"--networkid=42", "init", "./testdata/clique.json"}
-	t.Logf("Initializing geth: %v ", args)
-	g := runGeth(t, args...)
-	datadir := g.Datadir
-	g.WaitExit()
-	return datadir
-}
+// func initGeth(t *testing.T) string {
+// 	args := []string{"--networkid=42", "init", "./testdata/clique.json"}
+// 	t.Logf("Initializing geth: %v ", args)
+// 	g := runGeth(t, args...)
+// 	datadir := g.Datadir
+// 	g.WaitExit()
+// 	return datadir
+// }
 
 func startLightServer(t *testing.T) *gethrpc {
 	datadir := initGeth(t)

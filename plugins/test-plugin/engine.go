@@ -1,15 +1,14 @@
 package main
 
-import(
+import (
 	"errors"
 	"math/big"
 
 	"github.com/openrelayxyz/plugeth-utils/core"
 	"github.com/openrelayxyz/plugeth-utils/restricted"
-	"github.com/openrelayxyz/plugeth-utils/restricted/types"
-	"github.com/openrelayxyz/plugeth-utils/restricted/hasher"
 	"github.com/openrelayxyz/plugeth-utils/restricted/consensus"
 	"github.com/openrelayxyz/plugeth-utils/restricted/params"
+	"github.com/openrelayxyz/plugeth-utils/restricted/types"
 )
 
 var (
@@ -78,7 +77,9 @@ func (e *engine) FinalizeAndAssemble(chain consensus.ChainHeaderReader, header *
 
 	}
 	header.Root = state.IntermediateRoot(false)
-	hasher := hasher.NewStackTrie(nil)
+
+	//hasher := hasher.NewStackTrie(nil)
+	hasher := types.TrieHasher(nil)
 	block := types.NewBlockWithWithdrawals(header, txs, uncles, receipts, withdrawals, hasher)
 	return block, nil
 
