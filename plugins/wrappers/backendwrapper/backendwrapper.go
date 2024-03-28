@@ -13,11 +13,10 @@ import (
 	gcore "github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/event"
+	gparams "github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"github.com/ethereum/go-ethereum/log"
-	gparams "github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/ethereum/go-ethereum/rpc"
 
@@ -52,7 +51,7 @@ func NewBackend(b ethapi.Backend) *Backend {
 		panic(err.Error())
 	}
 	return &Backend{
-		b:  b,
+		b: b,
 		db: state.Database(),
 	}
 }
