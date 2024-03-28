@@ -17,10 +17,10 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/trie"
-
+	gparams "github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/ethereum/go-ethereum/rpc"
+
 	"github.com/openrelayxyz/plugeth-utils/core"
 	"github.com/openrelayxyz/plugeth-utils/restricted"
 	"github.com/openrelayxyz/plugeth-utils/restricted/params"
@@ -28,6 +28,7 @@ import (
 
 type Backend struct {
 	b               ethapi.Backend
+	db              state.Database
 	newTxsFeed      event.Feed
 	newTxsOnce      sync.Once
 	chainFeed       event.Feed
@@ -46,7 +47,14 @@ type Backend struct {
 }
 
 func NewBackend(b ethapi.Backend) *Backend {
-	return &Backend{b: b}
+	state, _, err := b.StateAndHeaderByNumber(context.Background(), 0)
+	if err != nil {
+		panic(err.Error())
+	}
+	return &Backend{
+		b:  b,
+		db: state.Database(),
+	}
 }
 
 func (b *Backend) SuggestGasTipCap(ctx context.Context) (*big.Int, error) {
@@ -124,7 +132,7 @@ func (b *Backend) SendTx(ctx context.Context, signedTx []byte) error {
 	return b.b.SendTx(ctx, tx)
 }
 func (b *Backend) GetTransaction(ctx context.Context, txHash core.Hash) ([]byte, core.Hash, uint64, uint64, error) { // RLP Encoded transaction {
-	tx, blockHash, blockNumber, index, err := b.b.GetTransaction(ctx, common.Hash(txHash))
+	_, tx, blockHash, blockNumber, index, err := b.b.GetTransaction(ctx, common.Hash(txHash))
 	if err != nil {
 		return nil, core.Hash(blockHash), blockNumber, index, err
 	}
@@ -464,8 +472,30 @@ func (b *Backend) ChainConfig() *params.ChainConfig {
 	return b.chainConfig
 }
 
+func CloneChainConfig(cf *gparams.ChainConfig) *params.ChainConfig {
+	result := &params.ChainConfig{}
+	nval := reflect.ValueOf(result)
+	ntype := nval.Elem().Type()
+	lval := reflect.ValueOf(cf)
+	for i := 0; i < nval.Elem().NumField(); i++ {
+		field := ntype.Field(i)
+		v := nval.Elem().FieldByName(field.Name)
+		lv := lval.Elem().FieldByName(field.Name)
+		log.Info("Checking value for", "field", field.Name)
+		if lv.Kind() != reflect.Invalid {
+			// If core.ChainConfig doesn't have this field, skip it.
+			if v.Type() == lv.Type() && lv.CanSet() {
+				v.Set(lv)
+			} else {
+				convertAndSet(v, lv)
+			}
+		}
+	}
+	return result
+}
+
 func (b *Backend) GetTrie(h core.Hash) (core.Trie, error) {
-	tr, err := trie.NewStateTrie(trie.TrieID(common.Hash(h)), trie.NewDatabase(b.b.ChainDb()))
+	tr, err := b.db.OpenTrie(common.Hash(h))
 	if err != nil {
 		return nil, err
 	}
@@ -473,15 +503,15 @@ func (b *Backend) GetTrie(h core.Hash) (core.Trie, error) {
 }
 
 func (b *Backend) GetAccountTrie(stateRoot core.Hash, account core.Address) (core.Trie, error) {
-	tr, err := b.GetTrie(stateRoot)
+	tr, err := b.db.OpenTrie(common.Hash(stateRoot))
 	if err != nil {
 		return nil, err
 	}
-	act, err := tr.GetAccount(account)
+	act, err := tr.GetAccount(common.Address(account))
 	if err != nil {
 		return nil, err
 	}
-	acTr, err := trie.NewStateTrie(trie.StorageTrieID(common.Hash(stateRoot), crypto.Keccak256Hash(account[:]), common.Hash(act.Root)), trie.NewDatabase(b.b.ChainDb()))
+	acTr, err := b.db.OpenStorageTrie(common.Hash(stateRoot), common.Address(account), common.Hash(act.Root), tr)
 	if err != nil {
 		return nil, err
 	}
@@ -489,5 +519,5 @@ func (b *Backend) GetAccountTrie(stateRoot core.Hash, account core.Address) (cor
 }
 
 func (b *Backend) GetContractCode(h core.Hash) ([]byte, error) {
-	return state.NewDatabase(b.b.ChainDb()).ContractCode(common.Hash{}, common.Hash(h))
+	return state.NewDatabase(b.b.ChainDb()).ContractCode(common.Address{}, common.Hash(h))
 }

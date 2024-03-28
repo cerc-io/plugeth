@@ -45,7 +45,7 @@ type EVMInterpreter struct {
 	table *JumpTable
 
 	hasher    crypto.KeccakState // Keccak256 hasher instance shared across opcodes
-	hasherBuf common.Hash        // Keccak256 hasher result array shared aross opcodes
+	hasherBuf common.Hash        // Keccak256 hasher result array shared across opcodes
 
 	readOnly   bool   // Whether to throw on stateful modifications
 	returnData []byte // Last CALL's return data for subsequent reuse
@@ -56,8 +56,15 @@ func NewEVMInterpreter(evm *EVM) *EVMInterpreter {
 	// If jump table was not initialised we set the default one.
 	var table *JumpTable
 	switch {
+	case evm.chainRules.IsCancun:
+		table = &cancunInstructionSet
 	case evm.chainRules.IsShanghai:
 		table = &shanghaiInstructionSet
+		// begin PluGeth injection
+		if !evm.chainRules.IsMerge {
+			table[RANDOM] = frontierInstructionSet[DIFFICULTY]
+		}
+		// end PluGeth injection
 	case evm.chainRules.IsMerge:
 		table = &mergeInstructionSet
 	case evm.chainRules.IsLondon:
@@ -70,8 +77,12 @@ func NewEVMInterpreter(evm *EVM) *EVMInterpreter {
 		table = &constantinopleInstructionSet
 	case evm.chainRules.IsByzantium:
 		table = &byzantiumInstructionSet
-	case evm.chainRules.IsEIP158:
+
+	// begin PluGeth injection
+	case evm.chainRules.IsEIP160:
 		table = &spuriousDragonInstructionSet
+	// end PluGeth injection
+	
 	case evm.chainRules.IsEIP150:
 		table = &tangerineWhistleInstructionSet
 	case evm.chainRules.IsHomestead:
@@ -93,6 +104,11 @@ func NewEVMInterpreter(evm *EVM) *EVMInterpreter {
 		}
 	}
 	evm.Config.ExtraEips = extraEips
+	// begin PluGeth injection
+	if pluginTable := pluginOpCodeSelect(table); pluginTable != nil {
+		table = pluginTable
+	}
+	// end PluGeth injection
 	return &EVMInterpreter{evm: evm, table: table}
 }
 
@@ -145,7 +161,7 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (
 		debug   = in.evm.Config.Tracer != nil
 	)
 	// Don't move this deferred function, it's placed before the capturestate-deferred method,
-	// so that it get's executed _after_: the capturestate needs the stacks before
+	// so that it gets executed _after_: the capturestate needs the stacks before
 	// they are returned to the pools
 	defer func() {
 		returnStack(stack)

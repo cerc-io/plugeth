@@ -4,10 +4,13 @@ import (
 	"math/big"
 	"encoding/json"
 
+	"github.com/holiman/uint256"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/node"
+
 	"github.com/openrelayxyz/plugeth-utils/core"
 )
 
@@ -56,7 +59,7 @@ func (w *WrappedContract) Address() core.Address {
 }
 
 func (w *WrappedContract) Value() *big.Int {
-	return w.c.Value()
+	return new(big.Int).SetBytes(w.c.Value().Bytes())
 }
 
 func (w *WrappedContract) Input() []byte {
@@ -127,7 +130,8 @@ func NewWrappedStateDB(d *state.StateDB) *WrappedStateDB {
 
 // GetBalance(Address) *big.Int
 func (w *WrappedStateDB) GetBalance(addr core.Address) *big.Int {
-	return w.s.GetBalance(common.Address(addr))
+	return new(big.Int).SetBytes(w.s.GetBalance(common.Address(addr)).Bytes())
+	
 }
 
 // GetNonce(Address) uint64
@@ -166,8 +170,8 @@ func (w *WrappedStateDB) GetState(addr core.Address, hsh core.Hash) core.Hash {
 }
 
 // HasSuicided(Address) bool
-func (w *WrappedStateDB) HasSuicided(addr core.Address) bool { // I figured we'd skip some of the future labor and update the name now
-	return w.s.HasSuicided(common.Address(addr))
+func (w *WrappedStateDB) HasSuicided(addr core.Address) bool {
+	return w.s.HasSelfDestructed(common.Address(addr))
 }
 
 // // Exist reports whether the given account exists in state.
@@ -198,7 +202,11 @@ func (w *WrappedStateDB) SlotInAccessList(addr core.Address, slot core.Hash) (ad
 func (w *WrappedStateDB) IntermediateRoot(deleteEmptyObjects bool) core.Hash {
 	return core.Hash(w.s.IntermediateRoot(deleteEmptyObjects))
 }
-	
+
+func (w *WrappedStateDB) AddBalance(addr core.Address, amount *big.Int) {
+	castAmount := new(uint256.Int)
+	w.s.AddBalance(common.Address(addr), castAmount.SetBytes(amount.Bytes()))
+}
 
 type Node struct {
 	n *node.Node
@@ -231,7 +239,7 @@ func (n *Node) ResolvePath(x string) string {
 	return n.n.ResolvePath(x)
 }
 func (n *Node) Attach() (core.Client, error) {
-	return n.n.Attach()
+	return n.n.Attach(), nil
 }
 func (n *Node) Close() error {
 	return n.n.Close()

@@ -3,9 +3,11 @@ package geth
 import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/node"
+	"github.com/ethereum/go-ethereum/rpc"
+	
 	"github.com/ethereum/go-ethereum/plugins"
 	"github.com/ethereum/go-ethereum/plugins/wrappers"
-	"github.com/ethereum/go-ethereum/rpc"
+	
 	"github.com/openrelayxyz/plugeth-utils/core"
 	"github.com/openrelayxyz/plugeth-utils/restricted"
 )
