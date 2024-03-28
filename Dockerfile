@@ -12,7 +12,7 @@ RUN apk add --no-cache gcc musl-dev binutils-gold linux-headers git
 ARG GIT_VDBTO_TOKEN
 
 # Get dependencies - will also be cached if we won't change go.mod/go.sum
-WORKDIR /go-ethereum/
+WORKDIR /go-ethereum
 COPY go.mod .
 COPY go.sum .
 COPY wrapmain wrapmain
