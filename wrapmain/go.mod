@@ -112,4 +112,7 @@ require (
 	rsc.io/tmplfunc v0.0.3 // indirect
 )
 
-replace github.com/ethereum/go-ethereum => ../
+replace (
+	github.com/ethereum/go-ethereum => ../
+	github.com/openrelayxyz/plugeth-utils => git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-0
+)
