@@ -31,8 +31,8 @@ cloud.google.com/go/storage v1.6.0/go.mod h1:N7U0C8pVQ/+NIKOBQyamJIeKQKkZ+mxpohl
 cloud.google.com/go/storage v1.8.0/go.mod h1:Wv1Oy7z6Yz3DshWRJFhqM/UCfaWIRTdp0RXyy7KQOVs=
 cloud.google.com/go/storage v1.10.0/go.mod h1:FLPqc6j+Ki4BU591ie1oL6qBQGu2Bl/tZ9ullr3+Kg0=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
-git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-0 h1:4GwCBbdLB8mCZINDzoUqpPq7aP4Ha5PPYCyG2h6ee6s=
-git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-0/go.mod h1:COwKAuTZIsCouCOrIDBhvHZqpbOO1Ojgdy5KTvL8mJg=
+git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-1 h1:WMdo9Pb5lAn0e2WC1CcD6/mRTWwU0r2KjFoEh0mh2rs=
+git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-1/go.mod h1:Wf47tlE95PHZto1PMFRlmQAf98MBoNSRbwnQxeq0+Z0=
 github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9/go.mod h1:bOvUY6CB00SOBii9/FifXqc0awNKxLFCL/+pkDPuyl8=
 github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.0 h1:8q4SaHjFsClSvuVne0ID/5Ka8u3fcIHyqkLjcFpNRHQ=
 github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.0/go.mod h1:bjGvMhVMb+EEm3VRNQawDMUyMMjo+S5ewNjflkep/0Q=

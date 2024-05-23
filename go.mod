@@ -147,4 +147,4 @@ require (
 	rsc.io/tmplfunc v0.0.3 // indirect
 )
 
-replace github.com/openrelayxyz/plugeth-utils => git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-0
+replace github.com/openrelayxyz/plugeth-utils => git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-1
