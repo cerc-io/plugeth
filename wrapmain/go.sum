@@ -1,6 +1,6 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-0 h1:4GwCBbdLB8mCZINDzoUqpPq7aP4Ha5PPYCyG2h6ee6s=
-git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-0/go.mod h1:COwKAuTZIsCouCOrIDBhvHZqpbOO1Ojgdy5KTvL8mJg=
+git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-1 h1:WMdo9Pb5lAn0e2WC1CcD6/mRTWwU0r2KjFoEh0mh2rs=
+git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-1/go.mod h1:Wf47tlE95PHZto1PMFRlmQAf98MBoNSRbwnQxeq0+Z0=
 github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9/go.mod h1:bOvUY6CB00SOBii9/FifXqc0awNKxLFCL/+pkDPuyl8=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/toml v1.3.2 h1:o7IhLm0Msx3BaB+n3Ag7L8EVlByGnpq14C4YWiu/gL8=

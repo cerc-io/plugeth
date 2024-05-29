@@ -114,5 +114,5 @@ require (
 
 replace (
 	github.com/ethereum/go-ethereum => ../
-	github.com/openrelayxyz/plugeth-utils => git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-0
+	github.com/openrelayxyz/plugeth-utils => git.vdb.to/cerc-io/plugeth-utils v1.5.0-cerc-1
 )
